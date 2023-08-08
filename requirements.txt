@@ -17,6 +17,7 @@ ordered-set==4.1.0
 packaging==23.1
 Pygments==2.16.1
 pytz==2023.3
+redis==4.6.0
 rich==13.5.2
 SQLAlchemy==2.0.19
 typing_extensions==4.7.1
