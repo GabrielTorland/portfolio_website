@@ -4,18 +4,12 @@ from email.mime.text import MIMEText
 import os
 from models import Email
 
-def send_email(request, db):
-
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
-    email_address = request.form.get('email')
-    subject = request.form.get('subject')
-    message_content = request.form.get('message')
-
+def store_email(db, fname, lname, email_address, subject, message_content):
     email_entry = Email(fname=fname, lname=lname, email=email_address, subject=subject, message=message_content)
     db.session.add(email_entry)
     db.session.commit()
 
+def send_email(fname, lname, email_address, subject, message_content):
     msg = MIMEText(f"From: {fname} {lname}\nEmail: {email_address}\n\n{message_content}")
     msg['Subject'] = subject
     msg['From'] = os.getenv('SMTP_USER')
