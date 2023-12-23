@@ -3,7 +3,7 @@ services:
   web:
     image: "portfolio-website:latest"
     ports:
-      - "2332:8000"
+      - "2332:2332"
     env_file: 
       - .env
     restart: unless-stopped 

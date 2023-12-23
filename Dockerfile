@@ -1,14 +1,7 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.10-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    gcc \
-    # any other dependencies you might need
-    && rm -rf /var/lib/apt/lists/*
-
-# Set environment variables
+# Prevent Python from writing pyc files to disc and from buffering stdout and stderr
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
@@ -16,25 +9,22 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /usr/src/app
 
 # Install dependencies
-# Copy the requirements file into the container at /usr/src/app
-COPY requirements.txt ./
-# Install any needed packages specified in requirements.txt
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container at /usr/src/app
+# Copy the current directory contents into the container
 COPY . .
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+# Run the application as a non-root user for security
+RUN useradd -m myuser
+USER myuser
 
-# Define environment variable
-ENV SMTP_SERVER "smtp.gmail.com"
-ENV SMTP_PORT "587"
-ENV SMTP_USER "user@example.com" 
-ENV SMTP_PASSWORD "password"
-ENV SMTP_RECEIVER "otheruser@example.com"
-ENV REDIS_URL "redis://redis:6379"
-ENV DATABASE_URI "postgresql://postgres:postgres@db:5432/postgres"
+# Make port 2387 available to the world outside this container
+EXPOSE 2387
+
+# Healthcheck to ensure service is running
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:2387/ || exit 1
 
 # Run app.py when the container launches
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:2387", "--timeout", "90", "app:app"]
