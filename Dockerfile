@@ -22,9 +22,5 @@ USER myuser
 # Make port 2387 available to the world outside this container
 EXPOSE 2387
 
-# Healthcheck to ensure service is running
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:2387/ || exit 1
-
 # Run app.py when the container launches
-CMD ["gunicorn", "-b", "0.0.0.0:2387", "--timeout", "90", "app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:2387", "--log-level", "debug", "app:app"]
