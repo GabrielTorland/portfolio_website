@@ -23,5 +23,9 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
         responseDiv.innerHTML = "An error occurred.";
         responseDiv.className = 'alert alert-danger';
         responseDiv.style.display = 'block';
+        
+        setTimeout(() => {
+            responseDiv.style.display = 'none';  // Hide the response after 3 seconds
+        }, 3000);
     });
 });

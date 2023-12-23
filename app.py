@@ -1,5 +1,5 @@
 from flask import request, render_template, send_from_directory, make_response
-from models import db, Email
+from models import db
 from email_utils import send_email, store_email
 from config import app, limiter
 from datetime import datetime, timedelta

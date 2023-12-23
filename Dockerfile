@@ -28,7 +28,13 @@ COPY . .
 EXPOSE 8000
 
 # Define environment variable
-ENV NAME World
+ENV SMTP_SERVER "smtp.gmail.com"
+ENV SMTP_PORT "587"
+ENV SMTP_USER "user@example.com" 
+ENV SMTP_PASSWORD "password"
+ENV SMTP_RECEIVER "otheruser@example.com"
+ENV REDIS_URL "redis://redis:6379"
+ENV DATABASE_URI "postgresql://postgres:postgres@db:5432/postgres"
 
 # Run app.py when the container launches
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "app:app"]

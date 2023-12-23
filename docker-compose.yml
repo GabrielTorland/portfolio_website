@@ -1,8 +1,9 @@
 version: '3.8'
 services:
   web:
-    build: .
+    image: "portfolio-website:latest"
     ports:
       - "2332:8000"
-    environment:
-      - NAME=World
+    env_file: 
+      - .env
+    restart: unless-stopped 
