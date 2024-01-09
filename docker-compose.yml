@@ -1,9 +1,43 @@
 version: '3.8'
 services:
-  web:
-    image: "portfolio-website:latest"
+  my-portfolio-website:
+    container_name: "my-portfolio-website" 
+    image: portfolio-website:latest
     ports:
-      - "2387:2387"
+      - 2387:2387
     env_file: 
       - .env
-    restart: unless-stopped 
+    restart: unless-stopped
+    networks:
+      - server_default
+
+  redis_storage_backend:
+    container_name: redis_storage_backend
+    image: redis:latest
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+    networks:
+      - server_default
+
+  emails_db:
+    container_name: postgres_emails_db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - server_default
+
+volumes:
+  postgres_data: null
+
+networks:
+  server_default:
+    external: true
