@@ -18,13 +18,13 @@ Before you begin, ensure you have the following installed:
 To get started with your own instance of the website, you can either fork this repository or clone it directly using Git:
 
 ```bash
-git clone [URL of the repository]
+git clone git@github.com:GabrielTorland/portfolio_website.git
 ```
 
 ### 2. Set Environment Variables
 
 Next, you'll need to set up the required environment variables. Create a .env file in the root directory of the project and fill in the following variables:
-
+```css
 SMTP_SERVER= [SMTP server address]
 SMTP_PORT= [SMTP port]
 SMTP_USER= [SMTP username]
@@ -35,6 +35,7 @@ DATABASE_URI= [Your database URI]
 POSTGRES_USER= [Postgres username]
 POSTGRES_PASSWORD= [Postgres password]
 DB_NAME= [Database name]
+```
 
 ### 3. Build the Docker Image
 
