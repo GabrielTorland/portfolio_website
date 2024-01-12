@@ -16,6 +16,7 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
         setTimeout(() => {
             responseDiv.style.display = 'none';  // Hide the response after 3 seconds
         }, 3000);
+        this.reset();
     })
     .catch(error => {
         console.error('Error:', error);
@@ -27,5 +28,6 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
         setTimeout(() => {
             responseDiv.style.display = 'none';  // Hide the response after 3 seconds
         }, 3000);
+        this.reset();
     });
 });
