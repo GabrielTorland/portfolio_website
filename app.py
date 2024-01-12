@@ -49,4 +49,7 @@ def sitemap():
     return response
 
 if __name__ == '__main__':
+    if app.config["TMP_SQLITE_DATABASE"]:
+        with app.app_context():
+            db.create_all()
     app.run(host="0.0.0.0", port=2387, debug=False)
