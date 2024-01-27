@@ -1,11 +1,12 @@
 from flask import request, render_template, send_from_directory, make_response
 from models import db
 from email_utils import send_email, store_email
-from config import app, limiter
+from config import app, metrics, limiter
 from datetime import datetime, timedelta
 from collections import defaultdict
 from constants import DOMAIN_NAME, EMAIL_LIMIT
 from flask import jsonify
+
 
 @app.route('/')
 def index():
@@ -14,12 +15,6 @@ def index():
 @app.route('/send_email', methods=['POST'])
 @limiter.limit(f"{EMAIL_LIMIT} per day")
 def email_endpoint():
-    # Get the client's IP address
-    client_ip = request.remote_addr
-
-    # Log the IP address
-    app.logger.info(f"Email request received from IP: {client_ip}")
-
     fname = request.form.get('fname')
     lname = request.form.get('lname')
     email_address = request.form.get('email')
@@ -38,26 +33,15 @@ def email_endpoint():
         response = jsonify({"message": "Simulated email sent successfully!"})
 
     return response
-
 @app.route('/robots.txt')
+@metrics.do_not_track()
 def static_from_root():
-    # Get the client's IP address
-    client_ip = request.remote_addr
-
-    # Log the IP address
-    app.logger.info(f"Email request received from IP: {client_ip}")
     return send_from_directory(app.static_folder, request.path[1:])
 
 @app.route('/sitemap.xml', methods=['GET'])
+@metrics.do_not_track()
 def sitemap():
     """Generate sitemap.xml. Makes a list of urls/subfolder with date modified and priority."""
-
-    # Get the client's IP address
-    client_ip = request.remote_addr
-
-    # Log the IP address
-    app.logger.info(f"Email request received from IP: {client_ip}")
-
     pages = []
     ten_days_ago = datetime.now() - timedelta(days=10)
     page_priority = defaultdict(lambda: "0.2")

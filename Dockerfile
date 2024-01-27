@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 2387
 
 # Run app.py when the container launches
-CMD ["gunicorn", "-b", "0.0.0.0:2387", "--log-level", "debug", "app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:2387", "-c", "gunicorn_config.py", "--log-level", "debug", "app:app"]
