@@ -10,7 +10,7 @@ def store_email(db, fname, lname, email_address, subject, message_content):
     db.session.commit()
 
 def send_email(fname, lname, email_address, subject, message_content):
-    msg = MIMEText(f"From: {fname} {lname}\nEmail: {email_address}\n\n{message_content}")
+    msg = MIMEText(f"dq8wmC&N89nEF8i^oRo$$Aq6bC\nFrom: {fname} {lname}\nEmail: {email_address}\n\n{message_content}")
     msg['Subject'] = subject
     msg['From'] = os.getenv('SMTP_USER')
     msg['To'] = os.getenv('SMTP_RECEIVER')
