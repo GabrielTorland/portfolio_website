@@ -5,6 +5,8 @@ from config import app, limiter
 from datetime import datetime, timedelta
 from collections import defaultdict
 from constants import DOMAIN_NAME, EMAIL_LIMIT
+from forms import EmailForm
+import requests
 
 @app.route('/')
 def index():
@@ -13,17 +15,36 @@ def index():
 @app.route('/send_email', methods=['POST'])
 @limiter.limit(f"{EMAIL_LIMIT} per day")
 def email_endpoint():
-    fname = request.form.get('fname')
-    lname = request.form.get('lname')
-    email_address = request.form.get('email')
-    subject = request.form.get('subject')
-    message_content = request.form.get('message')
+    form = EmailForm(request.form)
+    if not form.validate_on_submit():
+        return {"message": form.errors}, 400
+
+    recaptcha_response = request.form['g-recaptcha-response']
+
+    recaptcha_data = {
+        'secret': app.config['RECAPTCHA_SECRET_KEY'],
+        'response': recaptcha_response
+    }
+
+    recaptcha_response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=recaptcha_data)
+    recaptcha_response = recaptcha_response.json()
+
+
+    if not recaptcha_response.get('success'):
+        return {"message": "Recaptcha validation failed."}, 400
+
+    fname = form.fname.data
+    lname = form.lname.data
+    email_address = form.email.data
+    subject = form.subject.data
+    message_content = form.message.data
+
     store_email(db, fname, lname, email_address, subject, message_content)
+
     if not app.config['TESTING']:
-        response = send_email(fname, lname, email_address, subject, message_content)
+        return send_email(fname, lname, email_address, subject, message_content)
     else:
-        response = {"message": "Simulated email sent successfully!"}
-    return response
+        return {"message": "Simulated email sent successfully!"}, 200
 
 @app.route('/robots.txt')
 def static_from_root():
