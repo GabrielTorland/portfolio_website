@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 services:
   my-portfolio-website:
     container_name: "my-portfolio-website" 
@@ -9,7 +9,7 @@ services:
       - .env
     restart: unless-stopped
     networks:
-      - server_default
+      - swag_reverse_proxy
 
   redis_storage_backend:
     container_name: redis_storage_backend
@@ -18,7 +18,7 @@ services:
       - 6379:6379
     restart: unless-stopped
     networks:
-      - server_default
+      - swag_reverse_proxy
 
   emails_db:
     container_name: postgres_emails_db
@@ -33,11 +33,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - server_default
+      - swag_reverse_proxy
 
 volumes:
   postgres_data: null
 
 networks:
-  server_default:
+  swag_reverse_proxy:
     external: true
