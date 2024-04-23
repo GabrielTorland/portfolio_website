@@ -6,10 +6,26 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.ok){
+            return response.json();
+        }
+        else {
+            const responseDiv = document.getElementById('formResponse');
+            responseDiv.className = 'alert alert-danger';
+            console.log(response.data.message)
+            responseDiv.innerHTML = "Failed to send email.";
+            responseDiv.style.display = 'block';
+            setTimeout(() => {
+                responseDiv.style.display = 'none';
+            }, 3000);
+            this.reset();
+        }
+        
+    })
     .then(data => {
         const responseDiv = document.getElementById('formResponse');
-        responseDiv.className = data.error ? 'alert alert-danger' : 'alert alert-success';
+        responseDiv.className = 'alert alert-success';
         responseDiv.innerHTML = data.message;
         responseDiv.style.display = 'block';
 
@@ -21,7 +37,7 @@ document.getElementById('emailForm').addEventListener('submit', function(e) {
     .catch(error => {
         console.error('Error:', error);
         const responseDiv = document.getElementById('formResponse');
-        responseDiv.innerHTML = "An error occurred.";
+        responseDiv.innerHTML = "Failed to send email.";
         responseDiv.className = 'alert alert-danger';
         responseDiv.style.display = 'block';
         
