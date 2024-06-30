@@ -1271,6 +1271,15 @@ input[type="text"] {
   margin: 0 !important;
 }
 
+.skill-icon-size {
+    max-width: 100%; /* Adjust the viewport width as needed */
+    height: auto;
+}
+
+.skill-item {
+    margin-bottom: 20px; /* Ensure this value matches the margin-bottom of row-pb-md */
+}
+
 .col-padding {
   padding: 6px !important;
   margin: 0px !important;

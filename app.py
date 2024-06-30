@@ -10,7 +10,9 @@ import requests
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    with open("skills_links.txt", "r") as file:
+        skills_links = file.readlines()
+    return render_template('index.html', skills_links=skills_links)
 
 @app.route('/send_email', methods=['POST'])
 @limiter.limit(f"{EMAIL_LIMIT} per day")
