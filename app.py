@@ -1,6 +1,5 @@
 from flask import request, render_template, send_from_directory, make_response
-from models import db
-from email_utils import send_email, store_email
+from email_utils import send_email
 from config import app, limiter
 from datetime import datetime, timedelta
 from collections import defaultdict
@@ -16,41 +15,64 @@ def index():
 
 @app.route('/send_email', methods=['POST'])
 @limiter.limit(f"{EMAIL_LIMIT} per day")
-def email_endpoint():
+def email():
+    """ Send an email from the contact form. """
     form = EmailForm(request.form)
     if not form.validate_on_submit():
         return {"message": form.errors}, 400
 
     recaptcha_response = request.form['g-recaptcha-response']
-
     recaptcha_data = {
         'secret': app.config['RECAPTCHA_SECRET_KEY'],
         'response': recaptcha_response
     }
 
-    recaptcha_response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=recaptcha_data)
-    recaptcha_response = recaptcha_response.json()
-
+    try:
+        recaptcha_response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=recaptcha_data)
+        recaptcha_response.raise_for_status()
+        recaptcha_response = recaptcha_response.json()
+    except requests.exceptions.RequestException as e:
+        app.logger.error(f"Error during reCAPTCHA verification: {e}")
+        return {"message": "Failed to send email"}, 500
+    except ValueError:
+        app.logger.error("Invalid JSON in reCAPTCHA response.")
+        return {"message": "Failed to send email"}, 500
 
     if not recaptcha_response.get('success'):
-        print("Recaptcha failed")
+        for error_code in recaptcha_response.get('error-codes', []):
+            match error_code:
+                case "missing-input-secret":
+                    app.logger.error("Secret parameter is missing.")
+                case "invalid-input-secret":
+                    app.logger.error("Secret parameter is invalid or malformed.")
+                case "missing-input-response":
+                    app.logger.warning("Response parameter is missing.")
+                case "invalid-input-response":
+                    app.logger.warning("Response parameter is invalid or malformed.")
+                case "bad-request":
+                    app.logger.error("Request is invalid or malformed.")
+                case "timeout-or-duplicate":
+                    app.logger.info("Response is too old or already used.")
+                case _:
+                    app.logger.error(f"Unexpected error code: {error_code}.")
         return {"message": "Failed to send email"}, 400
+    else:
+        app.logger.info("Recaptcha verification successful.")
 
+    # These are automatically sanitized by Flask-WTF
     fname = form.fname.data
     lname = form.lname.data
     email_address = form.email.data
     subject = form.subject.data
     message_content = form.message.data
 
-    # Store the email in the database
-    store_email(db, fname, lname, email_address, subject, message_content)
-
     if not app.config['TESTING']:
         message, failed = send_email(fname, lname, email_address, subject, message_content)
-        print(message)
         if failed:
+            app.logger.error(message)
             return {"message": "Failed to send email"}, 500
         else:
+            app.logger.info(message)
             return {"message": "Email sent successfully!"}, 200
     else:
         return {"message": "Simulated email sent successfully!"}, 200
@@ -79,7 +101,4 @@ def sitemap():
     return response
 
 if __name__ == '__main__':
-    if app.config["TMP_SQLITE_DATABASE"]:
-        with app.app_context():
-            db.create_all()
     app.run(host="0.0.0.0", port=2387, debug=False)
