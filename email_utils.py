@@ -21,16 +21,23 @@ def send_email(fname, lname, email_address, subject, message_content):
             server.starttls()
             server.login(os.getenv('SMTP_USER'), os.getenv('SMTP_PASSWORD'))
             server.sendmail(os.getenv('SMTP_SENDER'), os.getenv('SMTP_RECEIVER'), msg.as_string())
-        return jsonify({"message": "Email sent successfully!"}), 200
+        print("Email sent successfully!")
+        return "Email sent successfully!", False
     except SMTPConnectError:
-        return jsonify({"message": "Failed to connect to the SMTP server."}), 500
+        print("Failed to connect to the SMTP server.")
+        return "Failed to send email", True
     except SMTPAuthenticationError:
-        return jsonify({"message": "SMTP authentication failed. Check your username and password."}), 500
+        print("SMTP authentication failed. Check your username and password.")
+        return "Failed to send email", True
     except SMTPRecipientsRefused:
-        return jsonify({"message": "The recipient(s) was refused by the server."}), 500
+        print("The recipient(s) was refused by the server.")
+        return "Failed to send email", True
     except SMTPSenderRefused:
-        return jsonify({"message": "The sender was refused by the server."}), 500
+        print("The sender was refused by the server.")
+        return "Failed to send email", True
     except SMTPDataError:
-        return jsonify({"message": "The server replied with an unexpected error code."}), 500
+        print("The server replied with an unexpected error code.")
+        return "Failed to send email", True
     except Exception as e:
-        return jsonify({"message": f"Error sending email: {str(e)}"}), 500
+        print(f"Error sending email: {str(e)}")
+        return "Failed to send email", True

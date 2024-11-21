@@ -33,7 +33,8 @@ def email_endpoint():
 
 
     if not recaptcha_response.get('success'):
-        return {"message": "Recaptcha validation failed."}, 400
+        print("Recaptcha failed")
+        return {"message": "Failed to send email"}, 400
 
     fname = form.fname.data
     lname = form.lname.data
@@ -41,10 +42,16 @@ def email_endpoint():
     subject = form.subject.data
     message_content = form.message.data
 
+    # Store the email in the database
     store_email(db, fname, lname, email_address, subject, message_content)
 
     if not app.config['TESTING']:
-        return send_email(fname, lname, email_address, subject, message_content)
+        message, failed = send_email(fname, lname, email_address, subject, message_content)
+        print(message)
+        if failed:
+            return {"message": "Failed to send email"}, 500
+        else:
+            return {"message": "Email sent successfully!"}, 200
     else:
         return {"message": "Simulated email sent successfully!"}, 200
 
@@ -67,7 +74,7 @@ def sitemap():
 
     sitemap_xml = render_template('sitemap_template.xml', pages=pages)
     response = make_response(sitemap_xml)
-    response.headers["Content-Type"] = "application/xml"    
+    response.headers["Content-Type"] = "application/xml"
 
     return response
 
