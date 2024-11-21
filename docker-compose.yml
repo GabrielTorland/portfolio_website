@@ -4,20 +4,22 @@ services:
     image: portfolio-website:latest
     ports:
       - 2387:2387
+    volumes:
+      - ./portfolio_website.log:/usr/src/app/portfolio_website.log
     env_file:
       - .env
-    restart: unless-stopped
     networks:
       - swag_reverse_proxy
+    restart: unless-stopped
 
   redis_storage_backend:
     container_name: redis_storage_backend
     image: redis:latest
     ports:
       - 6379:6379
-    restart: unless-stopped
     networks:
       - swag_reverse_proxy
+    restart: unless-stopped
 
 networks:
   swag_reverse_proxy:

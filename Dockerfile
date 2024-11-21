@@ -1,5 +1,6 @@
 # Use an official Python runtime as a parent image
-FROM tiangolo/uwsgi-nginx-flask:python3.8-alpine
+#FROM tiangolo/uwsgi-nginx-flask:python3.8-alpine
+FROM python:3.11-slim
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
