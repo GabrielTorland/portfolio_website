@@ -19,7 +19,8 @@ def email():
     """ Send an email from the contact form. """
     form = EmailForm(request.form)
     if not form.validate_on_submit():
-        return {"message": form.errors}, 400
+        app.logger.warning(f"Form validation: {form.errors}")
+        return {"message": "Failed to send email"}, 400
 
     recaptcha_response = request.form['g-recaptcha-response']
     recaptcha_data = {
