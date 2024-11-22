@@ -51,7 +51,7 @@
 
 	<div id="page">
 		<header id="fh5co-header" class="fh5co-cover js-fullheight" role="banner"
-			style="background-image: url('{{ url_for('static', filename='images/background_ai_brain.png') }}');"
+			style="background-image: url('{{ url_for('static', filename='images/palms.jpg') }}');"
 			data-stellar-background-ratio="0.5">
 			<div class="overlay"></div>
 			<div class="container">
@@ -248,11 +248,11 @@
 							style="background-image: url('{{ url_for('static', filename='images/plankton.jpg') }}');">
 							<div class="desc">
 								<h3>Plankton Classification</h3>
-								<span>Convolutional Neural Network</span>
+								<span>Deep Learning</span>
 							</div>
 						</a>
 					</div>
-					<div class="col-md-3 text-center col-	padding animate-box">
+					<div class="col-md-3 text-center col-padding animate-box">
 						<a href="https://github.com/GabrielTorland/advent_of_code" class="work"
 							style="background-image: url('{{ url_for('static', filename='images/aoc.png') }}');">
 							<div class="desc">
@@ -275,6 +275,24 @@
 							style="background-image: url('{{ url_for('static', filename='images/gabriel_torland_pixar_art.png') }}');">
 							<div class="desc">
 								<h3>Portfolio Website</h3>
+								<span>Web Development</span>
+							</div>
+						</a>
+					</div>
+					<div class="col-md-3 text-center col-padding animate-box">
+						<a href="https://github.com/GabrielTorland/hiragana_practice_tool" class="work"
+							style="background-image: url('{{ url_for('static', filename='images/hiragana.png') }}');">
+							<div class="desc">
+								<h3>Hiragana Practice Tool</h3>
+								<span>Deep Learning</span>
+							</div>
+						</a>
+					</div>
+					<div class="col-md-3 text-center col-padding animate-box">
+						<a href="https://github.com/GabrielTorland/firefox_wallpaper" class="work"
+							style="background-image: url('{{ url_for('static', filename='images/firefox.jpg') }}');">
+							<div class="desc">
+								<h3>Firefox Wallpaper Plugin</h3>
 								<span>Web Development</span>
 							</div>
 						</a>
@@ -357,16 +375,13 @@
 								placeholder="Your message here"></textarea>
 						</div>
 					</div>
-					<div class="g-recaptcha" data-sitekey="6LfV1sMpAAAAANmgzJkJLdaGpIwq1qzRdFx-jXk5"></div>
+					<div class="g-recaptcha" data-sitekey="6LfV1sMpAAAAANmgzJkJLdaGpIwq1qzRdFx-jXk5" required></div>
 					<br>
 					<div class="form-group">
 						<input type="submit" value="Send Message" class="btn btn-primary">
 					</div>
 				</form>
 				<div id="formResponse" class="alert" style="display: none;"></div>
-				<form action="?" method="POST">
-					<div id="email_recaptcha_form"></div>
-				</form>
 			</div>
 		</div>
 
