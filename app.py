@@ -6,12 +6,12 @@ from collections import defaultdict
 from constants import DOMAIN_NAME, EMAIL_LIMIT
 from forms import EmailForm
 import requests
+import os
 
 @app.route('/')
 def index():
-    with open("skills_links.txt", "r") as file:
-        skills_links = file.readlines()
-    return render_template('index.html', skills_links=skills_links)
+    image_files = os.listdir(os.path.join(app.static_folder, 'images/skills'))
+    return render_template('index.html', image_files=image_files)
 
 @app.route('/send_email', methods=['POST'])
 @limiter.limit(f"{EMAIL_LIMIT} per day")

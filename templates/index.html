@@ -309,9 +309,10 @@
 					</div>
 				</div>
 				<div class="row row-pb-md">
-					{% for link in skills_links %}
+					{% for image_file in image_files %}
 					<div class="col-md-1 col-sm-3 col-xs-6 text-center skill-item">
-						<img src="{{ link }}" class="skill-icon-size">
+						<img src="{{ url_for('static', filename='images/skills/' + image_file) }}"
+							class="skill-icon-size">
 					</div>
 					{% endfor %}
 				</div>
