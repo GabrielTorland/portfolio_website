@@ -2,14 +2,14 @@
 function showResponse(message, alert_type, timeout = 3000) {
     const responseDiv = document.getElementById('formResponse');
 
-    const className = `alert alert-${alert_type}`;
+    const className = `alert alert-${alert_type} visible`;
 
     responseDiv.innerHTML = message;
     responseDiv.className = className;
     responseDiv.style.display = 'block';
 
     setTimeout(() => {
-        responseDiv.style.display = 'none';
+        responseDiv.classList.remove("visible");
     }, timeout);
 }
 
